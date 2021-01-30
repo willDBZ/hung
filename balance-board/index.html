@@ -1,0 +1,97 @@
+<html>
+
+<head>
+    <style>
+        canvas {
+            background-color: black
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;">
+    </canvas>
+</body>
+
+<script>
+    var canvas = document.getElementById("canvas");
+    const width = 200;
+    const height = 1;
+    const center = { x: 150, y: 250 };
+
+
+    function drawSquare(x, y) {
+        ctx.beginPath();
+        ctx.rect(x, y, width, height);
+        ctx.stroke();
+    }
+
+    function drawBanana(x, y) {
+        drawing = new Image();
+        drawing.src = "./banana.png"; // can also be a remote URL e.g. http://
+        drawing.onload = function () {
+            ctx.drawImage(drawing, 0, 0, 100, 100);
+        };
+    }
+
+    function drawRotatedRect(x, y, width, height, degrees) {
+
+        // first save the untranslated/unrotated context
+        ctx.save();
+
+        ctx.beginPath();
+        // move the rotation point to the center of the rect
+        ctx.translate(x + width / 2, y + height / 2);
+        // rotate the rect
+        ctx.rotate(degrees * Math.PI / 180);
+
+        // draw the rect on the transformed context
+        // Note: after transforming [0,0] is visually [x,y]
+        //       so the rect needs to be offset accordingly when drawn
+        ctx.rect(-width / 2, -height / 2, width, height);
+
+        ctx.fillStyle = "gold";
+        ctx.fill();
+
+        // restore the context to its untranslated/unrotated state
+        ctx.restore();
+
+    }
+
+    function drawCircle(x, y) {
+        var c = document.getElementById("canvas");
+        var ctx = c.getContext("2d");
+        ctx.beginPath();
+
+        ctx.arc(x, y, r = 10, 0, 2 * Math.PI);
+        ctx.stroke();
+    }
+
+    var ctx = canvas.getContext("2d");
+
+
+    drawCircle(center.x + 100, center.y - 10);
+
+
+    degrees = 180
+
+    for (let i = 0; i < 20; i++) {
+        degrees = degrees + 10
+        drawRotatedRect(center.x, center.y - 10, width, height, degrees)
+
+    }
+
+    drawBanana(50, 50);
+    drawRotatedRect(center.x, center.y - 10, width, height, degrees)
+    canvas.onclick = function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        degrees = degrees + 10
+        drawRotatedRect(center.x, center.y - 10, width, height, degrees)
+        drawCircle(center.x + 100, center.y - 10);
+        drawBanana(50, 50);
+    }
+
+</script>
+
+</html>
